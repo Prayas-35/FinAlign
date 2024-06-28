@@ -1,23 +1,16 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/ytFTUcTJiLh
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import {Link} from "react-router-dom"
 import TextareaAutosize from 'react-textarea-autosize';
 import { useState } from 'react';
 import './HomePage.css';
 
-
-
 export default function HomePage() {
   const [value, setValue] = useState('')
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="flex flex-col min-h-[100dvh]" id="homepage">
       <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between">
         <Link href="#" className="flex items-center" prefetch={false}>
           <MountainIcon className="h-6 w-6" />
-          <span className="ml-2 text-lg font-semibold">Fintech</span>
+          <span className="ml-2 text-lg font-semibold">FinAlign</span>
         </Link>
         <nav className="hidden lg:flex items-center gap-6">
           <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
@@ -51,6 +44,7 @@ export default function HomePage() {
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
                     href="#"
+                    id="get-started"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
@@ -58,6 +52,7 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="#"
+                    id="learn-more"
                     className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
@@ -127,7 +122,7 @@ export default function HomePage() {
             <div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
               <div className="p-6 bg-muted rounded-lg shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center">
+                  <div className="rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center" id="UserIcon">
                     <UserIcon className="h-6 w-6" />
                   </div>
                   <div>
@@ -136,13 +131,13 @@ export default function HomePage() {
                   </div>
                 </div>
                 <p className="mt-4 text-muted-foreground">
-                  "Fintech has been a game-changer for our business. The\n platform's features and insights have helped
-                  us make more\n informed financial decisions."
+                  "FinAlign has been a game-changer for our business. The platform's features and insights have helped
+                  us make more informed financial decisions."
                 </p>
               </div>
               <div className="p-6 bg-muted rounded-lg shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center">
+                  <div className="rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center" id="UserIcon">
                     <UserIcon className="h-6 w-6" />
                   </div>
                   <div>
@@ -151,8 +146,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <p className="mt-4 text-muted-foreground">
-                  "Fintech has been a game-changer for our business. The\n platform's features and insights have helped
-                  us make more\n informed financial decisions."
+                  "FinAlign has been a game-changer for our business. The platform's features and insights have helped
+                  us make more informed financial decisions."
                 </p>
               </div>
             </div>
@@ -185,7 +180,7 @@ export default function HomePage() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Fintech. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; 2024 FinAlign. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
             Terms of Service
@@ -250,7 +245,7 @@ function UserIcon(props) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke="#F3DBF5"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

@@ -1,0 +1,29 @@
+#homepage {
+    background-color: #140218;
+    color: #F3DCF5;
+}
+
+#get-started {
+    border: 1px solid #DA8CDE;
+    background-color: #DA8CDE !important;
+    color: #140218;
+}
+
+#get-started:hover {
+    background-color: transparent!important;
+    border: 1px solid #F3DCF5;
+    color: #F3DCF5;
+}
+
+#learn-more:hover {
+    background-color: #F3DCF5 !important;
+    color: #140218;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+#UserIcon {
+    background-color: #5EC940 !important;
+}
