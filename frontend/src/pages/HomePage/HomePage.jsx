@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-[100dvh]" id="homepage">
       <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between">
-        <Link href="#" className="flex items-center" prefetch={false}>
+        <Link to='/' className="flex items-center" prefetch={false}>
           <MountainIcon className="h-6 w-6" />
           <span className="ml-2 text-lg font-semibold">FinAlign</span>
         </Link>
@@ -16,10 +16,10 @@ export default function HomePage() {
           <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
             About Us
           </Link>
-          <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link to='/signup' className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
             Sign Up
           </Link>
-          <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link to='/login' className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
             Log In
           </Link>
         </nav>
@@ -245,7 +245,7 @@ function UserIcon(props) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#F3DBF5"
+      stroke="#E3EDDE"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

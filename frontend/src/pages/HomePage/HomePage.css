@@ -1,23 +1,26 @@
 #homepage {
-    background-color: #140218;
-    color: #F3DCF5;
+    background-color: #070A05;
+    color: #E3EDDE;
 }
 
 #get-started {
-    border: 1px solid #DA8CDE;
-    background-color: #DA8CDE !important;
+    border: 1px solid #AFD897;
+    background-color: #AFD897 !important;
     color: #140218;
 }
 
 #get-started:hover {
     background-color: transparent!important;
-    border: 1px solid #F3DCF5;
-    color: #F3DCF5;
+    color: #E3EDDE;
+}
+
+#learn-more {
+    border: 1px solid #AFD897 !important;
 }
 
 #learn-more:hover {
-    background-color: #F3DCF5 !important;
-    color: #140218;
+    background-color: #AFD897 !important;
+    color: #070A05;
 }
 
 a {
@@ -25,5 +28,5 @@ a {
 }
 
 #UserIcon {
-    background-color: #5EC940 !important;
+    background-color: #79D345 !important;
 }
