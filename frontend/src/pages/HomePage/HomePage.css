@@ -30,3 +30,8 @@ a {
 #UserIcon {
     background-color: #79D345 !important;
 }
+
+#features {
+    height: 450px;
+    width: 450px;
+}
