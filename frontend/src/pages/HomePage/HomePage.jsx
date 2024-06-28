@@ -245,7 +245,7 @@ function UserIcon(props) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#F3DBF5"
+      stroke="#E3EDDE"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
