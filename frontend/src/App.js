@@ -1,8 +1,12 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import  HomePage  from './pages/HomePage/HomePage';
-import  LoginPage  from './pages/Authentication/LoginPage/LoginPage';
-import  SignupPage  from './pages/Authentication/SignupPage/SignupPage';
-
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import HomePage from "./pages/HomePage/HomePage";
+import LoginPage from "./pages/Authentication/LoginPage/LoginPage.jsx";
+import SignupPage from "./pages/Authentication/SignupPage/SignupPage.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -12,10 +16,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
-
-
     </div>
   );
 }
