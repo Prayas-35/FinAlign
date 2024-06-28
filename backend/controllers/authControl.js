@@ -14,13 +14,36 @@ const register = async (req, res) => {
     try {
         const hashedPassword = await hashPassword(password);
 
-        const sql = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
-        db.run(sql, [username, hashedPassword, email], (err) => {
+        var sql = `SELECT username, email FROM users`;
+        db.all(sql, [], (err, rows) => {
             if (err) {
                 return res.status(400).json({ message: err.message });
             }
-            return res.status(201).json({ message: 'User created successfully' });
+            rows.forEach(row => {
+                if (row.username === username) {
+                    return res.status(400).json({ message: 'Username already exists' });
+                }
+                else if (row.email === email) {
+                    return res.status(400).json({ message: 'Email already exists' });
+                }
+                else {
+                    var sql = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
+                    db.run(sql, [username, hashedPassword, email], (err) => {
+                        if (err) {
+                            return res.status(400).json({ message: err.message });
+                        }
+                        jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+                            if (err) {
+                                return res.status(400).json({ message: err.message });
+                            }
+                        return res.status(201).cookie('token', token).json({ message: 'User created successfully' });
+                        });
+                    });
+                }
+            });
         });
+
+
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -87,8 +110,14 @@ const profile = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    res.clearCookie('token');
+    return res.status(200).json({ message: 'Logout successful' });
+}
+
 module.exports = {
     register,
     login,
-    profile
+    profile,
+    logout
 }

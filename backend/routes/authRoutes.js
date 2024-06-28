@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
-const { register, login, profile } = require('../controllers/authControl');
+const { register, login, profile, logout } = require('../controllers/authControl');
 const db = require('../models/model');
 
 router.use(cors(
@@ -18,6 +18,7 @@ router.get('/', (req, res) => {
 router.post('/register', register);
 router.post('/login', login);
 router.get('/profile', profile);
+router.post('/logout', logout);
 
 // router.get('/users', (req, res) => {
 //     db.all(`SELECT * FROM users`, [], (err, rows) => {
