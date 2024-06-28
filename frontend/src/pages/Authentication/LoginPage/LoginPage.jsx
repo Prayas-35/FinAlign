@@ -30,10 +30,13 @@ const LoginPage = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         navigate('/'); // Adjust the path as needed
       } else {
-        alert("Login failed.");
+        console.log(data)
+        alert(data.message);
       }
     } catch (error) {
       console.error('Error:', error);
