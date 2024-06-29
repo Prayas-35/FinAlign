@@ -1,8 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/Authentication/LoginPage/LoginPage.jsx";
 import SignupPage from "./pages/Authentication/SignupPage/SignupPage.jsx";
