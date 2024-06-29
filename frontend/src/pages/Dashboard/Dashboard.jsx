@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "../../components/Header/Header";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([
@@ -77,7 +78,10 @@ function Dashboard() {
   const netBalance = totalIncome - totalExpenses;
 
   return (
+    <div>
+    <Header />
     <div className="min-h-screen w-full bg-gray-100 flex">
+
       <aside className="w-64 bg-white p-6 shadow-md">
         <div className="mb-8">
           <h2 className="text-lg font-semibold">Analytics</h2>
@@ -181,6 +185,7 @@ function Dashboard() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }
