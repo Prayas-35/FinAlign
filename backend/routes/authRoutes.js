@@ -6,7 +6,7 @@ const db = require('../models/model');
 
 router.use(cors(
     {
-        origin: 'http://localhost:3000',
+        origin: 'https://finalign.vercel.app',
         credentials: true
     }
 ));
