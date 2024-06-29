@@ -5,25 +5,23 @@ import LoginPage from "./pages/Authentication/LoginPage/LoginPage.jsx";
 import SignupPage from "./pages/Authentication/SignupPage/SignupPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { UserProvider } from "./context/UserContext.jsx";
-import ProtectedRoute from "./components/protectedRoutes/ProtectedRoutes.jsx";
-
 function App() {
   return (
     <div className="App">
       <UserProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route 
-        path="/dashboard" 
-        element={
-            <Dashboard />
-        } 
-      />
-        </Routes>
-      </Router>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <Dashboard/>
+              }
+            />
+          </Routes>
+        </Router>
       </UserProvider>
 
     </div>

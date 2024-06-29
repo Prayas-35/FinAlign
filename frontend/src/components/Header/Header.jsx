@@ -1,21 +1,21 @@
-import React, { useState ,useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
-
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user , logout } = useContext(UserContext);
+  const { token, logout } = useContext(UserContext);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     navigate('/'); // Redirect to home after logout
   };
+
   return (
     <div>
       <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between">
@@ -24,35 +24,35 @@ const Header = () => {
           <span className="ml-2 text-lg font-semibold">FinAlign</span>
         </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link to="#" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-              About Us
-              <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-            </Link>
-            {user ? (
-              <>
-                <Link to="/profile" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                  Profile
-                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                </Link>
-                <button onClick={handleLogout} className="group relative text-lg font-medium hover:underline underline-offset-4">
-                  Logout
-                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/signup" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                  Sign Up
-                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                </Link>
-                <Link to="/login" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                  Log In
-                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                </Link>
-              </>
-            )}
-          </nav>
+        <nav className="hidden lg:flex items-center gap-6">
+          <Link to="#" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+            About Us
+            <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+          </Link>
+          {token ? (
+            <>
+              <Link to="/profile" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+                Profile
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              </Link>
+              <button onClick={handleLogout} className="group relative text-lg font-medium hover:underline underline-offset-4">
+                Logout
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+                Sign Up
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              </Link>
+              <Link to="/login" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+                Log In
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              </Link>
+            </>
+          )}
+        </nav>
         <button onClick={toggleMenu} className="lg:hidden">
           <MenuIcon className="h-6 w-6" />
           <span className="sr-only">Open main menu</span>
@@ -64,12 +64,12 @@ const Header = () => {
           <Link to="#" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
             About Us
           </Link>
-          {user ? (
+          {token ? (
             <>
               <Link to="/profile" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
                 Profile
               </Link>
-              <button onClick={handleLogout} className="block text-lg font-medium mb-2">
+              <button onClick={() => { handleLogout(); toggleMenu(); }} className="block text-lg font-medium mb-2">
                 Logout
               </button>
             </>
