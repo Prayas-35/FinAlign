@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS log (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS finances (
+CREATE TABLE IF NOT EXISTS finance (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     balance INTEGER NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS daily_average (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS daily_average (
     date TEXT NOT NULL,
     average_expenditure REAL NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS monthly_average (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS monthly_average (
     average_expenditure REAL NOT NULL,
     average_income REAL NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS stock (
 id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -32,7 +32,7 @@ const register = async (req, res) => {
                         if (err) {
                             return res.status(400);
                         }
-                        jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+                        jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
                             if (err) {
                                 return res.status(400).json({ message: err.message });
                             }
@@ -74,7 +74,8 @@ const login = async (req, res) => {
                     if (err) {
                         return res.status(400).json({ message: err.message });
                     }
-                    return res.cookie('token', token).json({ token, message: 'Login successful' });
+                    return res.status(200).json({ token: token, message: 'Login successful' });
+                    // return res.cookie('token', token).json({ token, message: 'Login successful' });
                     // return res.status(200).json({ message: 'Login successful' });
                 });
 

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../../components/Header/Header';
+import { UserContext } from '../../../context/UserContext';
+import { useContext } from 'react';
 
 const LoginPage = () => {
+  const { login } = useContext(UserContext);
   const [formData, setFormData] = useState({
     username: '',   
     email: '',
@@ -35,6 +38,7 @@ const LoginPage = () => {
 
       if (response.ok) {
         navigate('/dashboard'); // Adjust the path as needed
+        login(data.token);
       } else {
         console.log(data)
         alert(data.message);

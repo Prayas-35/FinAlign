@@ -1,46 +1,35 @@
-
-// UserContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 export const UserContext = createContext();
 
+// Auth provider component
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/auth/profile', {
-          credentials: 'include', // Include credentials (cookies) in the request
-        });
-        if (response.ok) {
-          const profile = await response.json();
-          setUser(profile);
-        } else {
-          console.error('Failed to fetch user profile', response.statusText);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user profile', error);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
-  const logout = async () => {
-    try {
-      await fetch('http://localhost:5000/auth/logout', {
-        method: 'POST',
-        credentials: 'include', // Include credentials (cookies) in the request
-      });
-      setUser(null);
-    } catch (error) {
-      console.error('Failed to logout', error);
-    }
+  // Function to set token
+  const login = (token) => {
+    setToken(token);
+    // Store token in cookies
+    Cookies.set('token', token, { expires: 1 }); // Cookie expires in 7 days
   };
 
+  // Function to remove token
+  const logout = () => {
+    setToken(null);
+    Cookies.remove('token');
+  };
+
+  useEffect(() => {
+    // Check for token in cookies on initial load
+    const tokenFromCookie = Cookies.get('token');
+    if (tokenFromCookie) {
+      setToken(tokenFromCookie);
+    }
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ token, login, logout }}>
       {children}
     </UserContext.Provider>
   );

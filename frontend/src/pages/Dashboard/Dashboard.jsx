@@ -1,9 +1,54 @@
 import { useState } from "react";
 import "./Dashboard.css";
 import Header from "../../components/Header/Header";
+import { UserContext } from '../../context/UserContext';
+import { useContext } from 'react';
 
 function Dashboard() {
-  const [transactions, setTransactions] = useState([]);
+  const { token } = useContext(UserContext);
+  console.log(token);
+  const [transactions, setTransactions] = useState([
+    {
+      id: 1,
+      type: "expense",
+      category: "Groceries",
+      amount: 50.25,
+      date: "2023-06-01",
+      description: "Weekly grocery shopping",
+    },
+    {
+      id: 2,
+      type: "income",
+      category: "Salary",
+      amount: 3500.0,
+      date: "2023-06-15",
+      description: "June paycheck",
+    },
+    {
+      id: 3,
+      type: "expense",
+      category: "Utilities",
+      amount: 125.75,
+      date: "2023-06-05",
+      description: "Electricity bill",
+    },
+    {
+      id: 4,
+      type: "expense",
+      category: "Entertainment",
+      amount: 35.99,
+      date: "2023-06-10",
+      description: "Movie tickets",
+    },
+    {
+      id: 5,
+      type: "income",
+      category: "Freelance",
+      amount: 800.0,
+      date: "2023-06-20",
+      description: "Freelance project payment",
+    },
+  ]);
 
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
