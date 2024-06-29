@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom';
+import Header from '../../../components/Header/Header';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -45,42 +46,26 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-[100vh] flex-col">
-    <header className="flex items-center justify-between px-6 py-4 bg-background shadow">
-        <Link to='/' className="text-lg font-bold" prefetch={false}>
-        <a>FinAlign</a>
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link to='/login' className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            Login
-          </Link>
-          <Link
-            to='/signup'
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            prefetch={false}
-          >
-            <a>SignUp</a>
-          </Link>
-        </div>
-      </header>
+    <div className="flex min-h-[100vh] bg-black text-white flex-col">
+      <Header />
       <main className="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="space-y-4">
+        <div className="space-y-4 border-2 border-customteal rounded-lg p-3 flex flex-col justify-center items-center">
           <h1 className="text-3xl font-bold">Login</h1>
           <p className="text-muted-foreground">Sign in to your account to continue.</p>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4 flex flex-col justify-center items-center" onSubmit={handleSubmit}>
             <div className='space-y-1'>
-              <label htmlFor="username" className='p-4'>Username</label>
-              <input id="username" type="text" placeholder="john_doe" name='username' value={formData.username} onChange={handleChange} />
+              <label htmlFor="username" className='p-4 '>Username</label>
+              <input id="username" type="text" className='px-2 text-black border-2 border-customteal rounded-lg focus:outline-none focus:ring focus:ring-customteal'  name='username' value={formData.username} onChange={handleChange} />
             </div>
             <div className="space-y-1">
               <label htmlFor="email" className='p-4'>Email</label>
-              <input id="email" type="email" placeholder="john@example.com" name='email' value={formData.email} onChange={handleChange} />
+              <input id="email" type="email" className='px-2 text-black border-2 border-customteal rounded-lg focus:outline-none focus:ring focus:ring-customteal'  name='email' value={formData.email} onChange={handleChange} />
             </div>
             <div className="space-y-1">
               <label htmlFor="password" className='p-4'>Password</label>
-              <input id="password" type="password" name='password' value={formData.password} onChange={handleChange} />
+              <input id="password" type="password" className='px-2 text-black border-2 border-customteal rounded-lg focus:outline-none focus:ring focus:ring-customteal' name='password' value={formData.password} onChange={handleChange} />
             </div>
-            <button className="w-full">Login</button>
+            <button className="text-[1.1rem] bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-[2.2rem] py-[0.9rem] text-center mb-2">Login</button>
           </form>
         </div>
       </main>
