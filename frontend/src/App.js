@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/Authentication/LoginPage/LoginPage.jsx";
 import SignupPage from "./pages/Authentication/SignupPage/SignupPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                <Dashboard/>
+                <ProtectedRoute> <Dashboard />
+                </ProtectedRoute>
+
+
               }
             />
           </Routes>
