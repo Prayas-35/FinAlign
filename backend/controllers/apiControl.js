@@ -49,6 +49,38 @@ const getBalance = async (req, res) => {
     }
 }
 
+const transactions = async (req, res) => {
+    const token = req.headers.get('Authorization');
+    if (!token) {
+        return res.status(400).json({ message: 'Unauthorized' });
+    }
+
+    const userId = await verifyToken(token);
+    console.log('User ID:', userId);
+
+    const { date, category, description, type, amount } = req.body;
+
+    if (!date || !category || !description || !type || !amount) {
+        return res.status(400).json({ message: 'Invalid request' });
+    }
+
+    else if (type === 'expense') {
+        amount = -amount;
+    }
+
+    try {
+        db.run(`INSERT INTO log (user_id, amount, category, type, description, date) VALUES(?, ?, ?, ?)`, [userId, amount, category, type, description, date], (err, rows) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            console.log('Transactions:', rows);
+            return res.json({'transactions': rows, 'userId': userId });
+        });
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+    }
+}
+
 module.exports = { 
     getBalance 
 };
