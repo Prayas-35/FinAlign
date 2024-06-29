@@ -3,16 +3,7 @@ import "./Dashboard.css";
 import Header from "../../components/Header/Header";
 
 function Dashboard() {
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      type: "expense",
-      category: "Groceries",
-      amount: 50.25,
-      date: "2023-06-01",
-      description: "Weekly grocery shopping",
-    },
-  ]);
+  const [transactions, setTransactions] = useState([]);
 
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
@@ -55,8 +46,8 @@ function Dashboard() {
   return (
     <div>
       <Header />
-      <div className="min-h-screen w-full bg-gray-100 flex">
-        <aside className="w-64 bg-white p-6 shadow-md">
+      <div className="min-h-screen w-full bg-gradient flex flex-col lg:flex-row">
+        <aside className="w-full lg:w-64 bg-white p-6 shadow-md mb-6 lg:mb-0">
           <div className="mb-8">
             <h2 className="text-lg font-semibold">Analytics</h2>
           </div>
@@ -80,9 +71,11 @@ function Dashboard() {
           </div>
         </aside>
         <div className="flex-1 p-6">
-          <header className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">Transactions</h1>
-            <div className="flex items-center gap-2">
+          <header className="mb-6 flex flex-col lg:flex-row items-center justify-between">
+            <h1 className="text-2xl font-semibold mb-4 lg:mb-0">
+              Transactions
+            </h1>
+            <div className="flex flex-col lg:flex-row items-center gap-2">
               <select
                 value={newTransaction.type}
                 onChange={(e) =>
@@ -133,41 +126,48 @@ function Dashboard() {
               </button>
             </div>
           </header>
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="bg-white p-4 rounded-lg shadow"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-lg font-semibold">
-                      {transaction.category}
+          {transactions.length === 0 ? (
+            <div className="text-center text-gray-600">
+              <h2 className="text-2xl font-semibold">No Transactions Yet</h2>
+              <p className="mt-2">Start by adding your first transaction!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {transactions.map((transaction) => (
+                <div
+                  key={transaction.id}
+                  className="bg-white p-4 rounded-lg shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {transaction.category}
+                      </div>
+                      <div className="text-gray-500">{transaction.date}</div>
                     </div>
-                    <div className="text-gray-500">{transaction.date}</div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`font-semibold ${
-                        transaction.type === "expense"
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      ${transaction.amount.toFixed(2)}
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`font-semibold ${
+                          transaction.type === "expense"
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }`}
+                      >
+                        ${transaction.amount.toFixed(2)}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveTransaction(transaction.id)}
+                        className="h-9 px-4 bg-red-500 text-white rounded-md"
+                      >
+                        -
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleRemoveTransaction(transaction.id)}
-                      className="h-9 px-4 bg-red-500 text-white rounded-md"
-                    >
-                      -
-                    </button>
                   </div>
+                  <div className="text-gray-600">{transaction.description}</div>
                 </div>
-                <div className="text-gray-600">{transaction.description}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
