@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./Dashboard.css";
 import Header from "../../components/Header/Header";
 import { UserContext } from '../../context/UserContext';
-import { useContext } from 'react';
 
 function Dashboard() {
   const { token } = useContext(UserContext);
-  console.log(token);
+  
   const [transactions, setTransactions] = useState([
     {
       id: 1,
@@ -58,18 +57,40 @@ function Dashboard() {
     description: "",
   });
 
-  const handleAddTransaction = () => {
-    setTransactions([
-      ...transactions,
-      { ...newTransaction, id: transactions.length + 1 },
-    ]);
-    setNewTransaction({
-      type: "expense",
-      category: "",
-      amount: 0,
-      date: "",
-      description: "",
-    });
+  const [balance, setBalance] = useState(0);
+
+  const handleAddTransaction = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTransaction),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Transaction added:', result);
+
+      setTransactions([
+        ...transactions,
+        { ...newTransaction, id: transactions.length + 1 },
+      ]);
+      setNewTransaction({
+        type: "expense",
+        category: "",
+        amount: 0,
+        date: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error('Error adding transaction:', error.message);
+    }
   };
 
   const handleRemoveTransaction = (id) => {
@@ -87,6 +108,34 @@ function Dashboard() {
     .reduce((total, t) => total + t.amount, 0);
 
   const netBalance = totalIncome - totalExpenses;
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (token) {
+        try {
+          const response = await fetch('http://localhost:5000/api/balance', {
+            method: 'POST',
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const data = await response.json();
+          setBalance(data.balance);
+          console.log("Balance fetched:", data.balance);
+        } catch (error) {
+          console.error("Error fetching balance:", error.message);
+        }
+      }
+    };
+
+    fetchBalance();
+  }, [token]);
 
   return (
     <div>
@@ -111,7 +160,7 @@ function Dashboard() {
             </div>
             <div className="bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-xl font-semibold">Net Balance</div>
-              <div className="text-4xl font-bold">${netBalance.toFixed(2)}</div>
+              <div className="text-4xl font-bold">${balance.toFixed(2)}</div>
             </div>
           </div>
         </aside>
@@ -122,18 +171,20 @@ function Dashboard() {
             </h1>
             <div className="flex flex-col lg:flex-row items-center gap-2">
               <select
+                name="type"
                 value={newTransaction.type}
                 onChange={(e) =>
                   setNewTransaction({ ...newTransaction, type: e.target.value })
                 }
                 className="h-9 w-32 border rounded-md"
               >
-                <option value="expense">Expense</option>
+                <option  value="expense">Expense</option>
                 <option value="income">Income</option>
               </select>
               <input
                 type="text"
                 placeholder="Category"
+                name="category"
                 value={newTransaction.category}
                 onChange={(e) =>
                   setNewTransaction({
@@ -146,6 +197,7 @@ function Dashboard() {
               <input
                 type="number"
                 placeholder="Amount"
+                name="amount"
                 value={newTransaction.amount}
                 onChange={(e) =>
                   setNewTransaction({
@@ -157,6 +209,7 @@ function Dashboard() {
               />
               <input
                 type="date"
+                name="date"
                 value={newTransaction.date}
                 onChange={(e) =>
                   setNewTransaction({ ...newTransaction, date: e.target.value })

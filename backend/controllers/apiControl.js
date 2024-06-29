@@ -28,7 +28,7 @@ const getStock = async (symbol) => {
 // getStock("MSFT");
 
 const getBalance = async (req, res) => {
-    const token = req.headers.get('Authorization');
+    const token = req.headers['authorization'] || req.get('Authorization');
     if (!token) {
         return res.status(400).json({ message: 'Unauthorized' });
     }
