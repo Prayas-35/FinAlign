@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use('/auth', require('./routes/authRoutes'));
+app.use('/api', require('./routes/apiRoutes'));
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World');
