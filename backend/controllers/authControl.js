@@ -30,7 +30,7 @@ const register = async (req, res) => {
                     var sql = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
                     db.run(sql, [username, hashedPassword, email], (err) => {
                         if (err) {
-                            return res.status(400).json({ message: err.message });
+                            return res.status(400);
                         }
                         jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
                             if (err) {
