@@ -33,7 +33,7 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        navigate('/'); // Adjust the path as needed
+        navigate('/dashboard'); // Adjust the path as needed
       } else {
         console.log(data)
         alert(data.message);

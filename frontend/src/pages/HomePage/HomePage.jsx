@@ -1,37 +1,25 @@
-import {Link} from "react-router-dom"
-import TextareaAutosize from 'react-textarea-autosize';
+import { Form, Link } from "react-router-dom"
+import FormComponent from "../../components/FormComponent/FormComponent"
 import { useState } from 'react';
 import './HomePage.css';
+import Header from "../../components/Header/Header";
 
 export default function HomePage() {
   const [value, setValue] = useState('')
+
+  const sub = (e) => {
+    e.preventDefault();
+    alert("Thank you for your submission. We will get back to you shortly.")
+  }
+
+
   return (
     <div className="flex flex-col min-h-[100dvh]" id="homepage">
-      <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between">
-        <Link to='/' className="flex items-center" prefetch={false}>
-          <MountainIcon className="h-6 w-6" />
-          <span className="ml-2 text-lg font-semibold">FinAlign</span>
-        </Link>
-        <nav className="hidden lg:flex items-center gap-6">
-          <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            About Us
-          </Link>
-          <Link to='/signup' className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            Sign Up
-          </Link>
-          <Link to='/login' className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            Log In
-          </Link>
-        </nav>
-        <button variant="outline" size="icon" className="lg:hidden">
-          <MenuIcon className="h-6 w-6" />
-          <span className="sr-only">Toggle navigation</span>
-        </button>
-      </header>
+     <Header  />
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-9 md:py-12 lg:py-16 xl:py-24">
           <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-[1fr_600px]">
+            <div className="grid gap-4 lg:grid-cols-2 lg:gap-8 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
@@ -43,7 +31,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
-                    href="#"
+                    to='/login'
                     id="get-started"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
@@ -51,7 +39,7 @@ export default function HomePage() {
                     Get Started
                   </Link>
                   <Link
-                    href="#"
+                    to="/about"
                     id="learn-more"
                     className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
@@ -61,16 +49,16 @@ export default function HomePage() {
                 </div>
               </div>
               <img
-                src="/placeholder.svg"
-                width="550"
-                height="550"
+                src="/finance1.jpg"
+                width="400"
+                height="400"
                 alt="Hero"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg"
               />
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        <section className="w-full py-9 md:py-12 lg:py-16 bg-muted">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -86,7 +74,7 @@ export default function HomePage() {
                 width="550"
                 height="310"
                 alt="Features"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last hover:scale-105 transition-transform duration-300 ease-in-out"
                 id="features"
               />
               <div className="flex flex-col justify-center space-y-4">
@@ -112,7 +100,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
+        <section className="w-full py-9 md:py-12 lg:py-16">
           <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10 mx-auto">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Trusted by Thousands</h2>
@@ -163,19 +151,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
-              <form className="flex flex-col gap-2">
-                <input type="text" placeholder="Name" className="max-w-lg" />
-                <input type="email" placeholder="Email" className="max-w-lg" />
-                <TextareaAutosize
-                  minRows={3}
-                  maxRows={6}
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  placeholder="Type something..."
-                  className="border rounded px-2 py-1"
-                />
-                <button type="submit">Submit</button>
-              </form>
+              <FormComponent />
             </div>
           </div>
         </section>
@@ -194,49 +170,6 @@ export default function HomePage() {
     </div>
   )
 }
-
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  )
-}
-
-
-function MountainIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </svg>
-  )
-}
-
-
 function UserIcon(props) {
   return (
     <svg

@@ -44,7 +44,7 @@ const SignupPage = () => {
 
       if (response.ok) {
         // Redirect to homepage if response is okay
-        navigate('/'); // Adjust the path as needed
+        navigate('/dashboard'); // Adjust the path as needed
       } else {
         // Handle errors or invalid responses
         alert(data.message);
