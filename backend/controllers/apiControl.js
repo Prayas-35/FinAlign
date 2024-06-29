@@ -25,10 +25,14 @@ const getStock = async (symbol) => {
     }
 };
 
-getStock("MSFT");
+// getStock("MSFT");
 
 const getBalance = async (req, res) => {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE5Njg3OTA4LCJleHAiOjE3MTk2OTE1MDh9.1LphxHsApcLkcMcZcYEH3LCsYJTsxO6sBNlNfbbFVTs'
+    const token = req.headers.get('Authorization');
+    if (!token) {
+        return res.status(400).json({ message: 'Unauthorized' });
+    }
+
     const userId = await verifyToken(token);
     console.log('User ID:', userId);
 
@@ -38,14 +42,12 @@ const getBalance = async (req, res) => {
                 return res.status(500).json({ message: err.message });
             }
             console.log('Balance:', row.balance);
-            return res.json(row.balance);
+            return res.json({'balance': row.balance, 'userId': userId });
         });
     } catch (error) {
         console.error('Error fetching balance:', error);
     }
 }
-
-getBalance();
 
 module.exports = { 
     getBalance 

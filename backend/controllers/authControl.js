@@ -6,7 +6,7 @@ const JWT_SECRET = "secret"
 
 const register = async (req, res) => {
     const { username, password, email } = req.body;
-    // console.log(username, password, email);
+
     if (!username || !password || !email) {
         return res.status(400).json({ message: 'All fields are required' });
     }
@@ -14,40 +14,52 @@ const register = async (req, res) => {
     try {
         const hashedPassword = await hashPassword(password);
 
-        var sql = `SELECT username, email FROM users`;
-        db.all(sql, [], (err, rows) => {
+        // Check if username or email already exists
+        const sql = `SELECT username, email FROM users WHERE username = ? OR email = ?`;
+        db.get(sql, [username, email], (err, row) => {
             if (err) {
                 return res.status(400).json({ message: err.message });
             }
-            rows.forEach(row => {
+
+            if (row) {
                 if (row.username === username) {
                     return res.status(400).json({ message: 'Username already exists' });
-                }
-                else if (row.email === email) {
+                } else if (row.email === email) {
                     return res.status(400).json({ message: 'Email already exists' });
                 }
-                else {
-                    var sql = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
-                    db.run(sql, [username, hashedPassword, email], (err) => {
+            } else {
+                // Insert new user
+                const sqlInsertUser = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
+                db.run(sqlInsertUser, [username, hashedPassword, email], function (err) {
+                    if (err) {
+                        return res.status(400).json({ message: err.message });
+                    }
+
+                    const userId = this.lastID; // Get the last inserted ID
+
+                    // Create JWT token
+                    jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
                         if (err) {
-                            return res.status(400);
+                            return res.status(400).json({ message: err.message });
                         }
-                        jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+
+                        // Insert initial balance for the new user
+                        const sqlInsertFinance = `INSERT INTO finance (balance, user_id) VALUES (?, ?)`;
+                        db.run(sqlInsertFinance, [0, userId], (err) => {
                             if (err) {
                                 return res.status(400).json({ message: err.message });
                             }
-                        return res.status(201).cookie('token', token).json({ message: 'User created successfully' });
+
+                            return res.status(201).cookie('token', token).json({ message: 'User created successfully' });
                         });
                     });
-                }
-            });
+                });
+            }
         });
-
-
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-}
+};
 
 const login = async (req, res) => {
     const { username, password, email } = req.body;
