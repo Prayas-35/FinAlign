@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const db = require('../models/model');
+const { getBalance } = require('../controllers/apiControl');
 
 
 const allowedOrigins = ['https://finalign.vercel.app', 'http://localhost:3000'];
@@ -20,5 +21,7 @@ router.use(cors({
 router.get('/', (req, res) => {
     res.send('Hello World');
 });
+
+router.post('/balance', getBalance);
 
 module.exports = router;
