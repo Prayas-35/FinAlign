@@ -6,6 +6,7 @@ import SignupPage from "./pages/Authentication/SignupPage/SignupPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
+import PublicRoute from "./components/PublicRoute.jsx";
 function App() {
   return (
     <div className="App">
@@ -13,15 +14,25 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute> <LoginPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute> <SignupPage />
+                </PublicRoute>
+              }
+            />
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute> <Dashboard />
                 </ProtectedRoute>
-
-
               }
             />
           </Routes>
