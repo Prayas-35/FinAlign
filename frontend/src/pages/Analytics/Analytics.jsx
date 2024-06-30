@@ -2,6 +2,7 @@ import { ResponsivePie } from "@nivo/pie"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsiveLine } from "@nivo/line"
 import Header from "../../components/Header/Header"
+import "./Analytics.css"
 
 export default function Analytics() {
   const yearlyData = [
@@ -36,7 +37,7 @@ export default function Analytics() {
     { date: "2023-06-10", value: 95 },
   ]
   return (
-    <div className="bg-black text-customteal">
+    <div className="bg-blackish text-customteal" id="analytics">
       <Header />
     <div className="container mx-auto px-4 md:px-6 py-8 md:py-12 ">
       <h1 className="text-3xl md:text-4xl font-bold mb-8">Analytics Dashboard</h1>
