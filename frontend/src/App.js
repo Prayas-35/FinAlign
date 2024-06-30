@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import PublicRoute from "./components/PublicRoute.jsx";
+import Analytics from "./pages/Analytics/Analytics";
 function App() {
   return (
     <div className="App">
@@ -41,6 +42,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/analytics" element={ <Analytics />} />
           </Routes>
         </Router>
       </UserProvider>
