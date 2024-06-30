@@ -37,13 +37,12 @@ db.serialize(() => {
         //     console.log('Budget table created or already exists.');
         // }
     });
-    
+
     db.run(`CREATE TABLE IF NOT EXISTS log (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         date TEXT NOT NULL,
         category TEXT NOT NULL,
-        description TEXT NOT NULL,
         type TEXT NOT NULL,
         amount REAL NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -109,6 +108,21 @@ db.serialize(() => {
         symbols TEXT NOT NULL,
         price INTEGER NOT NULL,
         time DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+        );`, (err) => {
+        if (err) {
+            console.error('Error creating stock table', err.message);
+        }
+        // else {
+        //     console.log('Stock table created or already exists.');
+        // }
+    });
+
+    db.run(`CREATE TABLE IF NOT EXISTS total (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        total_income REAL NOT NULL,
+        total_expenditure REAL NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
         );`, (err) => {
         if (err) {
