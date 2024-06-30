@@ -80,11 +80,13 @@ function BarChart(props) {
         axisBottom={{
           tickSize: 0,
           tickPadding: 16,
+          tickTextColor: "#ffffff", // Set x-axis tick text color to white
         }}
         axisLeft={{
           tickSize: 0,
           tickValues: 4,
           tickPadding: 16,
+          tickTextColor: "#ffffff", // Set y-axis tick text color to white
         }}
         gridYValues={4}
         theme={{
@@ -154,11 +156,13 @@ function LineChart(props) {
         axisBottom={{
           tickSize: 0,
           tickPadding: 16,
+          tickTextColor: "#ffffff", // Set x-axis tick text color to white
         }}
         axisLeft={{
           tickSize: 0,
           tickValues: 5,
           tickPadding: 16,
+          tickTextColor: "#ffffff", // Set y-axis tick text color to white
         }}
         colors={["#2563eb", "#e11d48"]}
         pointSize={6}
