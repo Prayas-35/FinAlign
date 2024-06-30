@@ -50,7 +50,15 @@ const register = async (req, res) => {
                                 return res.status(400).json({ message: err.message });
                             }
 
-                            return res.status(201).cookie('token', token).json({ message: 'User created successfully' });
+                            // Insert initial total income and total expenditure for the new user
+                            const sqlInsertTotal = `INSERT INTO total (total_income, total_expenditure, user_id) VALUES (?, ?, ?)`;
+                            db.run(sqlInsertTotal, [0, 0, userId], (err) => {
+                                if (err) {
+                                    return res.status(400).json({ message: err.message });
+                                }
+
+                                return res.status(200).json({ token: token, message: 'User created' });
+                            });
                         });
                     });
                 });
