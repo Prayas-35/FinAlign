@@ -34,11 +34,11 @@ function Dashboard() {
 
         const data = await response.json();
         setTotalIncome(data.total_income);
-        setTotalExpenditure(-data.total_expenditure);
+        setTotalExpenditure(data.total_expenditure); // Remove the negative sign here
         setBalance(data.balance);
         console.log("Balance fetched:", data.balance);
         console.log("Total Income fetched:", data.total_income);
-        console.log("Total Expenditure fetched:", -data.total_expenditure);
+        console.log("Total Expenditure fetched:", data.total_expenditure);
       } catch (error) {
         console.error("Error fetching balance:", error.message);
       }
@@ -107,7 +107,7 @@ function Dashboard() {
   const handleRemoveTransaction = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/deletransactions/${id}`,
+        `http://localhost:5000/api/transactions/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -139,7 +139,7 @@ function Dashboard() {
     <div className="main-log">
       <Header />
       <div className="min-h-screen w-full flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-1/4 bg-blackish p-4 shadow border-shobuj-500">
+        <aside className="w-full lg:w-1/4 bg-blackish p-4 shadow border-shobuj-500 border-r-2 border-t-2">
           <div className="space-y-3">
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
@@ -157,7 +157,7 @@ function Dashboard() {
             </div>
           </div>
         </aside>
-        <main className="flex-1 p-6 pt-0">
+        <main className="flex-1 p-6 border-shobuj-500 border-t-2">
           <header className="mb-6 flex flex-col lg:flex-row items-center justify-between">
             <h1 className="text-2xl font-semibold mb-2 mt-1 lg:mb-0 text-wheatish">
               Transactions
@@ -227,38 +227,47 @@ function Dashboard() {
               <p className="mt-2">Start by adding your first transaction!</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="bg-white p-4 rounded-lg shadow"
+                  className="p-4 rounded-lg shadow bg-white"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-lg font-semibold text-gray-900">
+                      <div className="text-base font-semibold text-gray-900">
                         {transaction.category}
                       </div>
-                      <div className="text-gray-500">{transaction.date}</div>
+                      <div className="text-sm text-gray-500">
+                        {transaction.date}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {transaction.description}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <div
-                        className={`font-semibold ${
+                        className={`text-sm font-semibold ${
                           transaction.type === "expense"
                             ? "text-red-500"
                             : "text-green-500"
                         }`}
                       >
-                        ₹{transaction.amount.toFixed(2)}
+                        {transaction.type === "expense" ? "-₹" : "₹"}
+                        {Math.abs(transaction.amount).toFixed(2)}
                       </div>
-                      <button
-                        onClick={() => handleRemoveTransaction(transaction.id)}
-                        className="h-9 px-4 bg-red-500 text-white rounded-md"
-                      >
-                        -
-                      </button>
+                      {token && (
+                        <button
+                          onClick={() =>
+                            handleRemoveTransaction(transaction.id)
+                          }
+                          className="h-8 px-3 bg-red-500 text-white rounded-md text-xs"
+                        >
+                          Remove
+                        </button>
+                      )}
                     </div>
                   </div>
-                  <div className="text-gray-600">{transaction.description}</div>
                 </div>
               ))}
             </div>
