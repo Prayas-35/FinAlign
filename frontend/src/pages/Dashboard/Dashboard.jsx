@@ -15,24 +15,27 @@ function Dashboard() {
   });
   const [balance, setBalance] = useState(0);
 
-  const fetchTransactions = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/transactions", {
-        method: "GET",
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
+  const fetchBalance = async () => {
+    if (token) {
+      try {
+        const response = await fetch('http://localhost:5000/api/balance', {
+          method: 'POST',
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setBalance(data.balance);
+        console.log("Balance fetched:", data.balance);
+      } catch (error) {
+        console.error("Error fetching balance:", error.message);
       }
-
-      const data = await response.json();
-      setTransactions(data.transactions);
-      console.log("Transactions fetched:", data.transactions);
-    } catch (error) {
-      console.error("Error fetching transactions:", error.message);
     }
   };
 
@@ -62,6 +65,7 @@ function Dashboard() {
         date: "",
         description: "",
       });
+      await fetchBalance();
     } catch (error) {
       console.error("Error adding transaction:", error.message);
     }
@@ -101,39 +105,13 @@ function Dashboard() {
     .reduce((total, t) => total + t.amount, 0);
 
   const netBalance = totalIncome - totalExpenses;
-
+  
   useEffect(() => {
-    if (token) {
-      fetchTransactions();
-
-      const fetchBalance = async () => {
-        try {
-          const response = await fetch("http://localhost:5000/api/balance", {
-            method: "POST",
-            headers: {
-              Authorization: `${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          const data = await response.json();
-          setBalance(data.balance);
-          console.log("Balance fetched:", data.balance);
-        } catch (error) {
-          console.error("Error fetching balance:", error.message);
-        }
-      };
-
-      fetchBalance();
-    }
+    fetchBalance();
   }, [token]);
 
   return (
-    <div className="main-lo">
+    <div className="main-log">
       <Header />
       <div className="min-h-screen w-full flex flex-col lg:flex-row">
         {/* Static aside section */}

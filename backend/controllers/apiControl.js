@@ -122,7 +122,30 @@ const transactions = async (req, res) => {
     }
 }
 
+const getTransactions = async (req, res) => {
+    const token = req.headers['authorization'] || req.get('Authorization');
+    if (!token) {
+        return res.status(400).json({ message: 'Unauthorized' });
+    }
+
+    const userId = await verifyToken(token);
+    console.log('User ID:', userId);
+
+    try {
+        db.all(`SELECT * FROM log WHERE user_id = ?`, [userId], (err, rows) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            console.log(rows);
+            return res.json(rows);
+        });
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+    }
+};
+
 module.exports = { 
     getBalance,
-    transactions
+    transactions,
+    getTransactions
 };

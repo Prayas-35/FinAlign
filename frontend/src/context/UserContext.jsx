@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 export const UserContext = createContext();
@@ -11,7 +11,14 @@ export const UserProvider = ({ children }) => {
   const login = (token) => {
     setToken(token);
     // Store token in cookies
-    Cookies.set('token', token, { expires: 1 }); // Cookie expires in 7 days
+    Cookies.set('token', token, { expires: 7 }); // Cookie expires in 7 days
+  };
+
+   // Function to set token
+   const signup = (token) => {
+    setToken(token);
+    // Store token in cookies
+    Cookies.set('token', token, { expires: 7 }); // Cookie expires in 7 days
   };
 
   // Function to remove token
@@ -29,7 +36,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ token, login, logout }}>
+    <UserContext.Provider value={{ token, login, logout, signup }}>
       {children}
     </UserContext.Provider>
   );
