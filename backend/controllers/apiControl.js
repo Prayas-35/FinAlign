@@ -176,7 +176,7 @@ const deleteTransactions = async (req, res) => {
             const updateQueries = [
                 new Promise((resolve, reject) => {
                     if (amount < 0) {
-                        db.run('UPDATE total SET total_expenditure = total_expenditure - ? WHERE user_id = ?', [-amount, userId], function (err) {
+                        db.run('UPDATE total SET total_expenditure = total_expenditure + ? WHERE user_id = ?', [Math.abs(amount), userId], function (err) {
                             if (err) {
                                 reject(err);
                             } else {

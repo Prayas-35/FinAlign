@@ -5,7 +5,7 @@ import { UserContext } from "../../context/UserContext";
 
 function Dashboard() {
   const { token } = useContext(UserContext);
-  const [dele, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
     category: "",
@@ -14,31 +14,31 @@ function Dashboard() {
     description: "",
   });
   const [balance, setBalance] = useState(0);
-  const [TotalIncome, setTotalIncome] = useState(0);
+  const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpenditure, setTotalExpenditure] = useState(0);
 
   const fetchBalance = async () => {
     if (token) {
       try {
-        const response = await fetch('http://localhost:5000/api/balance', {
-          method: 'POST',
+        const response = await fetch("http://localhost:5000/api/balance", {
+          method: "POST",
           headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
           },
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
         setTotalIncome(data.total_income);
-        setTotalExpenditure(-(data.total_expenditure));
+        setTotalExpenditure(-data.total_expenditure);
         setBalance(data.balance);
         console.log("Balance fetched:", data.balance);
         console.log("Total Income fetched:", data.total_income);
-        console.log("Total Expenditure fetched:", -(data.total_expenditure));
+        console.log("Total Expenditure fetched:", -data.total_expenditure);
       } catch (error) {
         console.error("Error fetching balance:", error.message);
       }
@@ -48,23 +48,26 @@ function Dashboard() {
   const fetchTransactions = async () => {
     if (token) {
       try {
-        const response = await fetch('http://localhost:5000/api/getTransactions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          "http://localhost:5000/api/getTransactions",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
         setTransactions(data);
         console.log("Transactions fetched:", data);
       } catch (error) {
-        console.error("Error fetching dele:", error.message);
+        console.error("Error fetching transactions:", error.message);
       }
     }
   };
@@ -87,7 +90,7 @@ function Dashboard() {
       const result = await response.json();
       console.log("Transaction added:", result);
 
-      setTransactions([...dele, { ...newTransaction, id: result.id }]);
+      setTransactions([...transactions, { ...newTransaction, id: result.id }]);
       setNewTransaction({
         type: "expense",
         category: "",
@@ -117,9 +120,7 @@ function Dashboard() {
         throw new Error("Network response was not ok");
       }
 
-      setTransactions(
-        dele.filter((transaction) => transaction.id !== id)
-      );
+      setTransactions(transactions.filter((transaction) => transaction.id !== id));
       console.log("Transaction removed:", id);
       await fetchBalance();
     } catch (error) {
@@ -127,16 +128,6 @@ function Dashboard() {
     }
   };
 
-  // const totalExpenses = dele
-  //   .filter((t) => t.type === "expense")
-  //   .reduce((total, t) => total + t.amount, 0);
-
-  // const totalIncome = dele
-  //   .filter((t) => t.type === "income")
-  //   .reduce((total, t) => total + t.amount, 0);
-
-  // const netBalance = totalIncome - totalExpenses;
-  
   useEffect(() => {
     fetchBalance();
     fetchTransactions();
@@ -146,17 +137,17 @@ function Dashboard() {
     <div className="main-log">
       <Header />
       <div className="min-h-screen w-full flex flex-col lg:flex-row">
-        {/* Static aside section */}
-        <aside className="w-full lg:w-1/4 bg-white mt-4 p-4 shadow">
+        <aside className="w-full lg:w-1/4 bg-customteal mt-4 p-4 shadow">
           <div className="space-y-3">
-            {/* Your existing aside content here */}
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
-              <div className="text-gray-900">₹{totalExpenditure.toFixed(2)}</div>
+              <div className="text-gray-900">
+                ₹{totalExpenditure.toFixed(2)}
+              </div>
             </div>
             <div className="analytics-box bg-green-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Income</div>
-              <div className="text-gray-900">₹{TotalIncome.toFixed(2)}</div>
+              <div className="text-gray-900">₹{totalIncome.toFixed(2)}</div>
             </div>
             <div className="analytics-box bg-purple-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Net Balance</div>
@@ -166,7 +157,7 @@ function Dashboard() {
         </aside>
         <main className="flex-1 p-6">
           <header className="mb-6 flex flex-col lg:flex-row items-center justify-between">
-            <h1 className="text-2xl font-semibold mb-2 mt-1 lg:mb-0 text-shobuj-500">
+            <h1 className="text-2xl font-semibold mb-2 mt-1 lg:mb-0 text-wheatish">
               Transactions
             </h1>
             <div className="flex flex-col lg:flex-row items-center gap-2">
@@ -228,14 +219,14 @@ function Dashboard() {
               </button>
             </div>
           </header>
-          {dele.length === 0 ? (
+          {transactions.length === 0 ? (
             <div className="text-center text-gray-600">
               <h2 className="text-2xl font-semibold">No Transactions Yet</h2>
               <p className="mt-2">Start by adding your first transaction!</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {dele.map((transaction) => (
+              {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   className="bg-white p-4 rounded-lg shadow"
@@ -249,11 +240,10 @@ function Dashboard() {
                     </div>
                     <div className="flex items-center gap-4">
                       <div
-                        className={`font-semibold ${
-                          transaction.type === "expense"
+                        className={`font-semibold ${transaction.type === "expense"
                             ? "text-red-500"
                             : "text-green-500"
-                        }`}
+                          }`}
                       >
                         ₹{transaction.amount.toFixed(2)}
                       </div>
