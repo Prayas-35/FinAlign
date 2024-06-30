@@ -107,7 +107,7 @@ function Dashboard() {
   const handleRemoveTransaction = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/transactions/${id}`,
+        `http://localhost:5000/api/deletransactions/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -120,8 +120,8 @@ function Dashboard() {
         throw new Error("Network response was not ok");
       }
 
-      setTransactions(
-        transactions.filter((transaction) => transaction.id !== id)
+      setTransactions((prevTransactions) =>
+        prevTransactions.filter((transaction) => transaction.id !== id)
       );
       console.log("Transaction removed:", id);
       await fetchBalance();
