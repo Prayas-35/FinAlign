@@ -1,31 +1,80 @@
 
-import { ResponsiveLine } from "@nivo/line"
-import Header from "../../components/Header/Header"
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { ResponsiveLine } from '@nivo/line';
+import Header from '../../components/Header/Header';
+
+const API_KEY = 'C98J0MTBPXGIA2OY';
 
 export default function Stock() {
+  const [symbol, setSymbol] = useState('AAPL');
+  const [stockData, setStockData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPrice, setCurrentPrice] = useState(null);
+  const [priceChange, setPriceChange] = useState(null);
+
+  useEffect(() => {
+    const fetchStockData = async () => {
+      try {
+        const response = await axios.get(
+          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`
+        );
+        const data = response.data['Time Series (Daily)'];
+        const formattedData = Object.keys(data).map(date => ({
+          x: date,
+          y: parseFloat(data[date]['4. close']),
+        })).reverse();
+        setStockData(formattedData);
+
+        const latestDate = Object.keys(data)[0];
+        const previousDate = Object.keys(data)[1];
+        setCurrentPrice(data[latestDate]['4. close']);
+        const priceDifference = (data[latestDate]['4. close'] - data[previousDate]['4. close']).toFixed(2);
+        const priceChangePercentage = ((priceDifference / data[previousDate]['4. close']) * 100).toFixed(2);
+        setPriceChange(`${priceDifference} (${priceChangePercentage}%)`);
+      } catch (error) {
+        console.error('Error fetching stock data:', error);
+      }
+    };
+
+    fetchStockData();
+  }, [symbol]);
+
+  const handleSearch = () => {
+    setSymbol(searchTerm.toUpperCase());
+  };
+
   return (
     <div className="text-customteal bg-black">
-    <Header/>
-    <main className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_300px] gap-8 p-4 sm:p-6">
+      <Header />
+      <main className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_300px] gap-8 p-4 sm:p-6">
         <div className="flex flex-col gap-6">
           <div className="bg-background rounded-lg shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b">
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">$145.32</span>
-                <span className="text-sm text-green-500">+2.4%</span>
+                <span className="text-2xl font-bold">${currentPrice}</span>
+                <span className={`text-sm ${parseFloat(priceChange) > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {priceChange}
+                </span>
               </div>
-              <div className="text-lg font-semibold">Apple Inc. (AAPL)</div>
+              <div className="text-lg font-semibold">{symbol}</div>
             </div>
             <div className="p-6">
-              <TimeseriesChart className="aspect-[4/3]" />
+              <TimeseriesChart className="aspect-[4/3]" data={stockData} />
             </div>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground rounded-lg" />
-              <input type="search" placeholder="Search stocks..." className="pl-8 w-full rounded-lg" />
+              <input
+                type="search"
+                placeholder="Search stocks..."
+                className="pl-8 w-full rounded-lg"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-            <button variant="outline">Filter</button>
+            <button onClick={handleSearch} variant="outline">Filter</button>
           </div>
         </div>
         <div className="grid gap-4">
@@ -145,85 +194,65 @@ function StoreIcon(props) {
 }
 
 
-function TimeseriesChart(props) {
+function TimeseriesChart({ data }) {
   return (
-    <div {...props}>
+    <div className="aspect-[4/3]">
       <ResponsiveLine
         data={[
           {
-            id: "Desktop",
-            data: [
-              { x: "2018-01-01", y: 7 },
-              { x: "2018-01-02", y: 5 },
-              { x: "2018-01-03", y: 11 },
-              { x: "2018-01-04", y: 9 },
-              { x: "2018-01-05", y: 12 },
-              { x: "2018-01-06", y: 16 },
-              { x: "2018-01-07", y: 13 },
-            ],
-          },
-          {
-            id: "Mobile",
-            data: [
-              { x: "2018-01-01", y: 9 },
-              { x: "2018-01-02", y: 8 },
-              { x: "2018-01-03", y: 13 },
-              { x: "2018-01-04", y: 6 },
-              { x: "2018-01-05", y: 8 },
-              { x: "2018-01-06", y: 14 },
-              { x: "2018-01-07", y: 11 },
-            ],
+            id: 'Stock Prices',
+            data,
           },
         ]}
         margin={{ top: 10, right: 20, bottom: 40, left: 40 }}
         xScale={{
-          type: "time",
-          format: "%Y-%m-%d",
+          type: 'time',
+          format: '%Y-%m-%d',
           useUTC: false,
-          precision: "day",
+          precision: 'day',
         }}
         xFormat="time:%Y-%m-%d"
         yScale={{
-          type: "linear",
-          min: 0,
-          max: "auto",
+          type: 'linear',
+          min: 'auto',
+          max: 'auto',
         }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
           tickSize: 0,
           tickPadding: 16,
-          format: "%d",
-          tickValues: "every 1 day",
+          format: '%d',
+          tickValues: 'every 1 day',
         }}
         axisLeft={{
           tickSize: 0,
           tickValues: 5,
           tickPadding: 16,
         }}
-        colors={["#2563eb", "#e11d48"]}
+        colors={['#2563eb']}
         pointSize={6}
         useMesh={true}
         gridYValues={6}
         theme={{
           tooltip: {
             chip: {
-              borderRadius: "9999px",
+              borderRadius: '9999px',
             },
             container: {
-              fontSize: "12px",
-              textTransform: "capitalize",
-              borderRadius: "6px",
+              fontSize: '12px',
+              textTransform: 'capitalize',
+              borderRadius: '6px',
             },
           },
           grid: {
             line: {
-              stroke: "#f3f4f6",
+              stroke: '#f3f4f6',
             },
           },
         }}
         role="application"
       />
     </div>
-  )
+  );
 }

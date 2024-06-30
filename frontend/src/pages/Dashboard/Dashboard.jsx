@@ -72,7 +72,8 @@ function Dashboard() {
     }
   };
 
-  const handleAddTransaction = async () => {
+  const handleAddTransaction = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch("http://localhost:5000/api/transactions", {
         method: "POST",
