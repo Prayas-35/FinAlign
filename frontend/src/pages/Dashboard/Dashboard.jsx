@@ -14,6 +14,8 @@ function Dashboard() {
     description: "",
   });
   const [balance, setBalance] = useState(0);
+  const [TotalIncome, setTotalIncome] = useState(0);
+  const [totalExpenditure, setTotalExpenditure] = useState(0);
 
   const fetchBalance = async () => {
     if (token) {
@@ -31,10 +33,38 @@ function Dashboard() {
         }
 
         const data = await response.json();
+        setTotalIncome(data.total_income);
+        setTotalExpenditure(-(data.total_expenditure));
         setBalance(data.balance);
         console.log("Balance fetched:", data.balance);
+        console.log("Total Income fetched:", data.total_income);
+        console.log("Total Expenditure fetched:", -(data.total_expenditure));
       } catch (error) {
         console.error("Error fetching balance:", error.message);
+      }
+    }
+  };
+
+  const fetchTransactions = async () => {
+    if (token) {
+      try {
+        const response = await fetch('http://localhost:5000/api/getTransactions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setTransactions(data);
+        console.log("Transactions fetched:", data);
+      } catch (error) {
+        console.error("Error fetching transactions:", error.message);
       }
     }
   };
@@ -96,18 +126,19 @@ function Dashboard() {
     }
   };
 
-  const totalExpenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((total, t) => total + t.amount, 0);
+  // const totalExpenses = transactions
+  //   .filter((t) => t.type === "expense")
+  //   .reduce((total, t) => total + t.amount, 0);
 
-  const totalIncome = transactions
-    .filter((t) => t.type === "income")
-    .reduce((total, t) => total + t.amount, 0);
+  // const totalIncome = transactions
+  //   .filter((t) => t.type === "income")
+  //   .reduce((total, t) => total + t.amount, 0);
 
-  const netBalance = totalIncome - totalExpenses;
+  // const netBalance = totalIncome - totalExpenses;
   
   useEffect(() => {
     fetchBalance();
+    fetchTransactions();
   }, [token]);
 
   return (
@@ -120,11 +151,11 @@ function Dashboard() {
             {/* Your existing aside content here */}
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
-              <div className="text-gray-900">₹{totalExpenses.toFixed(2)}</div>
+              <div className="text-gray-900">₹{totalExpenditure.toFixed(2)}</div>
             </div>
             <div className="analytics-box bg-green-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Income</div>
-              <div className="text-gray-900">₹{totalIncome.toFixed(2)}</div>
+              <div className="text-gray-900">₹{TotalIncome.toFixed(2)}</div>
             </div>
             <div className="analytics-box bg-purple-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Net Balance</div>
