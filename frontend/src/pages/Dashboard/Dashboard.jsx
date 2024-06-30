@@ -160,7 +160,7 @@ function Dashboard() {
             </div>
             <div className="bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-xl font-semibold">Net Balance</div>
-              <div className="text-4xl font-bold">${balance.toFixed(2)}</div>
+              <div className="text-4xl font-bold">₹{balance.toFixed(2)}</div>
             </div>
           </div>
         </aside>

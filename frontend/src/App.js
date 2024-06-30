@@ -13,7 +13,13 @@ function App() {
       <UserProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+          <Route
+              path="/"
+              element={
+                <PublicRoute> <HomePage />
+                </PublicRoute>
+              }
+            />
             <Route
               path="/login"
               element={
