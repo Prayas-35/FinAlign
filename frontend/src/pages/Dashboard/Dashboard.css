@@ -133,3 +133,31 @@ html {
 .text-white {
   color: #ffffff;
 }
+
+.main-log {
+  background: #070a05;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #e3edde;
+}
+
+.analytics-box {
+  transition: transform 0.2s;
+  border: 1px solid #e0e0e0;
+  padding: 0.5rem;
+}
+
+.analytics-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.h6 {
+  font-size: 1rem;
+}
+
+.display-6 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+

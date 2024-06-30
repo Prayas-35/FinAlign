@@ -1,54 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import "./Dashboard.css";
 import Header from "../../components/Header/Header";
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from "../../context/UserContext";
 
 function Dashboard() {
   const { token } = useContext(UserContext);
-  
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      type: "expense",
-      category: "Groceries",
-      amount: 50.25,
-      date: "2023-06-01",
-      description: "Weekly grocery shopping",
-    },
-    {
-      id: 2,
-      type: "income",
-      category: "Salary",
-      amount: 3500.0,
-      date: "2023-06-15",
-      description: "June paycheck",
-    },
-    {
-      id: 3,
-      type: "expense",
-      category: "Utilities",
-      amount: 125.75,
-      date: "2023-06-05",
-      description: "Electricity bill",
-    },
-    {
-      id: 4,
-      type: "expense",
-      category: "Entertainment",
-      amount: 35.99,
-      date: "2023-06-10",
-      description: "Movie tickets",
-    },
-    {
-      id: 5,
-      type: "income",
-      category: "Freelance",
-      amount: 800.0,
-      date: "2023-06-20",
-      description: "Freelance project payment",
-    },
-  ]);
-
+  const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
     category: "",
@@ -56,31 +13,48 @@ function Dashboard() {
     date: "",
     description: "",
   });
-
   const [balance, setBalance] = useState(0);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/transactions", {
+        method: "GET",
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setTransactions(data.transactions);
+      console.log("Transactions fetched:", data.transactions);
+    } catch (error) {
+      console.error("Error fetching transactions:", error.message);
+    }
+  };
 
   const handleAddTransaction = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/transactions', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/transactions", {
+        method: "POST",
         headers: {
-          'Authorization': `${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(newTransaction),
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
 
       const result = await response.json();
-      console.log('Transaction added:', result);
+      console.log("Transaction added:", result);
 
-      setTransactions([
-        ...transactions,
-        { ...newTransaction, id: transactions.length + 1 },
-      ]);
+      setTransactions([...transactions, { ...newTransaction, id: result.id }]);
       setNewTransaction({
         type: "expense",
         category: "",
@@ -89,14 +63,33 @@ function Dashboard() {
         description: "",
       });
     } catch (error) {
-      console.error('Error adding transaction:', error.message);
+      console.error("Error adding transaction:", error.message);
     }
   };
 
-  const handleRemoveTransaction = (id) => {
-    setTransactions(
-      transactions.filter((transaction) => transaction.id !== id)
-    );
+  const handleRemoveTransaction = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/transactions/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      setTransactions(
+        transactions.filter((transaction) => transaction.id !== id)
+      );
+      console.log("Transaction removed:", id);
+    } catch (error) {
+      console.error("Error removing transaction:", error.message);
+    }
   };
 
   const totalExpenses = transactions
@@ -110,19 +103,21 @@ function Dashboard() {
   const netBalance = totalIncome - totalExpenses;
 
   useEffect(() => {
-    const fetchBalance = async () => {
-      if (token) {
+    if (token) {
+      fetchTransactions();
+
+      const fetchBalance = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/balance', {
-            method: 'POST',
+          const response = await fetch("http://localhost:5000/api/balance", {
+            method: "POST",
             headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
+              Authorization: `${token}`,
+              "Content-Type": "application/json",
             },
           });
 
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
 
           const data = await response.json();
@@ -131,42 +126,37 @@ function Dashboard() {
         } catch (error) {
           console.error("Error fetching balance:", error.message);
         }
-      }
-    };
+      };
 
-    fetchBalance();
+      fetchBalance();
+    }
   }, [token]);
 
   return (
-    <div>
+    <div className="main-lo">
       <Header />
-      <div className="min-h-screen w-full bg-gradient flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-64 bg-white p-6 shadow-md mb-6 lg:mb-0">
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold">Analytics</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-lg shadow">
-              <div className="text-xl font-semibold">Total Expenses</div>
-              <div className="text-4xl font-bold">
-                ${totalExpenses.toFixed(2)}
-              </div>
+      <div className="min-h-screen w-full flex flex-col lg:flex-row">
+        {/* Static aside section */}
+        <aside className="w-full lg:w-1/4 bg-white mt-4 p-4 shadow">
+          <div className="space-y-3">
+            {/* Your existing aside content here */}
+            <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
+              <div className="text-gray-900 font-semibold">Total Expenses</div>
+              <div className="text-gray-900">₹{totalExpenses.toFixed(2)}</div>
             </div>
-            <div className="bg-blue-50 p-4 rounded-lg shadow">
-              <div className="text-xl font-semibold">Total Income</div>
-              <div className="text-4xl font-bold">
-                ${totalIncome.toFixed(2)}
-              </div>
+            <div className="analytics-box bg-green-50 p-4 rounded-lg shadow">
+              <div className="text-gray-900 font-semibold">Total Income</div>
+              <div className="text-gray-900">₹{totalIncome.toFixed(2)}</div>
             </div>
-            <div className="bg-blue-50 p-4 rounded-lg shadow">
-              <div className="text-xl font-semibold">Net Balance</div>
-              <div className="text-4xl font-bold">₹{balance.toFixed(2)}</div>
+            <div className="analytics-box bg-purple-50 p-4 rounded-lg shadow">
+              <div className="text-gray-900 font-semibold">Net Balance</div>
+              <div className="text-gray-900">₹{balance.toFixed(2)}</div>
             </div>
           </div>
         </aside>
-        <div className="flex-1 p-6">
+        <main className="flex-1 p-6">
           <header className="mb-6 flex flex-col lg:flex-row items-center justify-between">
-            <h1 className="text-2xl font-semibold mb-4 lg:mb-0">
+            <h1 className="text-2xl font-semibold mb-2 mt-1 lg:mb-0 text-shobuj-500">
               Transactions
             </h1>
             <div className="flex flex-col lg:flex-row items-center gap-2">
@@ -177,8 +167,9 @@ function Dashboard() {
                   setNewTransaction({ ...newTransaction, type: e.target.value })
                 }
                 className="h-9 w-32 border rounded-md"
+                style={{ color: "black" }}
               >
-                <option  value="expense">Expense</option>
+                <option value="expense">Expense</option>
                 <option value="income">Income</option>
               </select>
               <input
@@ -193,6 +184,7 @@ function Dashboard() {
                   })
                 }
                 className="h-9 w-32 border rounded-md"
+                style={{ color: "black" }}
               />
               <input
                 type="number"
@@ -206,6 +198,7 @@ function Dashboard() {
                   })
                 }
                 className="h-9 w-32 border rounded-md"
+                style={{ color: "black" }}
               />
               <input
                 type="date"
@@ -215,12 +208,13 @@ function Dashboard() {
                   setNewTransaction({ ...newTransaction, date: e.target.value })
                 }
                 className="h-9 w-32 border rounded-md"
+                style={{ color: "black" }}
               />
               <button
                 onClick={handleAddTransaction}
-                className="h-9 px-4 bg-blue-500 text-white rounded-md"
+                className="h-9 px-4 bg-shobuj-500 text-white rounded-md"
               >
-                Add
+                Add Transaction
               </button>
             </div>
           </header>
@@ -238,7 +232,7 @@ function Dashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-lg font-semibold">
+                      <div className="text-lg font-semibold text-gray-900">
                         {transaction.category}
                       </div>
                       <div className="text-gray-500">{transaction.date}</div>
@@ -251,7 +245,7 @@ function Dashboard() {
                             : "text-green-500"
                         }`}
                       >
-                        ${transaction.amount.toFixed(2)}
+                        ₹{transaction.amount.toFixed(2)}
                       </div>
                       <button
                         onClick={() => handleRemoveTransaction(transaction.id)}
@@ -266,7 +260,7 @@ function Dashboard() {
               ))}
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -1,15 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        customteal: '#AFD897',
+        customteal: "#AFD897",
+        shobuj: {
+          500: "#447925",
+        },
+        wheatish: "#F5D6BA",
       },
     },
   },
   plugins: [],
-}
-
+};
