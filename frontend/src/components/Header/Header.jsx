@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,72 +13,95 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirect to home after logout
+    navigate("/"); // Redirect to home after logout
   };
 
   return (
     <div>
-      <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center" prefetch={false}>
+      <header className="bg-background px-4 lg:px-6 h-14 flex items-center justify-between shadow-md">
+        <Link to="/" className="flex items-center text-white">
           <MountainIcon className="h-6 w-6" />
           <span className="ml-2 text-lg font-semibold">FinAlign</span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
-          <Link to="#" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link to="#" className="text-white hover:text-gray-300">
             About Us
-            <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
           </Link>
           {token ? (
             <>
-              <Link to="/profile" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link to="/profile" className="text-white hover:text-gray-300">
                 Profile
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </Link>
-              <button onClick={handleLogout} className="group relative text-lg font-medium hover:underline underline-offset-4">
+              <button
+                onClick={handleLogout}
+                className="text-white hover:text-gray-300"
+              >
                 Logout
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </button>
             </>
           ) : (
             <>
-              <Link to="/signup" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link to="/signup" className="text-white hover:text-gray-300">
                 Sign Up
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </Link>
-              <Link to="/login" className="group relative text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link to="/login" className="text-white hover:text-gray-300">
                 Log In
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customteal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </Link>
             </>
           )}
         </nav>
-        <button onClick={toggleMenu} className="lg:hidden">
+        <button
+          onClick={toggleMenu}
+          className="lg:hidden text-white focus:outline-none"
+        >
           <MenuIcon className="h-6 w-6" />
           <span className="sr-only">Open main menu</span>
         </button>
       </header>
 
       {menuOpen && (
-        <nav className="lg:hidden bg-background p-4">
-          <Link to="#" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
+        <nav className="lg:hidden bg-background p-4 shadow-md">
+          <Link
+            to="#"
+            className="block text-white hover:text-gray-300 mb-2"
+            onClick={toggleMenu}
+          >
             About Us
           </Link>
           {token ? (
             <>
-              <Link to="/profile" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
+              <Link
+                to="/profile"
+                className="block text-white hover:text-gray-300 mb-2"
+                onClick={toggleMenu}
+              >
                 Profile
               </Link>
-              <button onClick={() => { handleLogout(); toggleMenu(); }} className="block text-lg font-medium mb-2">
+              <button
+                onClick={() => {
+                  handleLogout();
+                  toggleMenu();
+                }}
+                className="block text-white hover:text-gray-300 mb-2"
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/signup" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
+              <Link
+                to="/signup"
+                className="block text-white hover:text-gray-300 mb-2"
+                onClick={toggleMenu}
+              >
                 Sign Up
               </Link>
-              <Link to="/login" className="block text-lg font-medium mb-2" onClick={toggleMenu}>
+              <Link
+                to="/login"
+                className="block text-white hover:text-gray-300 mb-2"
+                onClick={toggleMenu}
+              >
                 Log In
               </Link>
             </>

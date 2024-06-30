@@ -9,6 +9,7 @@ module.exports = {
           500: "#447925",
         },
         wheatish: "#F5D6BA",
+        blackish: "#070a05",
       },
     },
   },

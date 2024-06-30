@@ -120,7 +120,9 @@ function Dashboard() {
         throw new Error("Network response was not ok");
       }
 
-      setTransactions(transactions.filter((transaction) => transaction.id !== id));
+      setTransactions(
+        transactions.filter((transaction) => transaction.id !== id)
+      );
       console.log("Transaction removed:", id);
       await fetchBalance();
     } catch (error) {
@@ -137,7 +139,7 @@ function Dashboard() {
     <div className="main-log">
       <Header />
       <div className="min-h-screen w-full flex flex-col lg:flex-row">
-        <aside className="w-full lg:w-1/4 bg-customteal mt-4 p-4 shadow">
+        <aside className="w-full lg:w-1/4 bg-blackish p-4 shadow border-shobuj-500">
           <div className="space-y-3">
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
@@ -155,7 +157,7 @@ function Dashboard() {
             </div>
           </div>
         </aside>
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 pt-0">
           <header className="mb-6 flex flex-col lg:flex-row items-center justify-between">
             <h1 className="text-2xl font-semibold mb-2 mt-1 lg:mb-0 text-wheatish">
               Transactions
@@ -240,10 +242,11 @@ function Dashboard() {
                     </div>
                     <div className="flex items-center gap-4">
                       <div
-                        className={`font-semibold ${transaction.type === "expense"
+                        className={`font-semibold ${
+                          transaction.type === "expense"
                             ? "text-red-500"
                             : "text-green-500"
-                          }`}
+                        }`}
                       >
                         ₹{transaction.amount.toFixed(2)}
                       </div>
