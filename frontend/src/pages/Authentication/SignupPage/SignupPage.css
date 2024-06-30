@@ -1,0 +1,12 @@
+#icons1 {
+    position: absolute;
+    z-index: 999;
+    color: #7AD447;
+    transform: translateX(19rem) translateY(1.1rem);
+}
+
+#signup-box {
+    width: 25rem;
+    border: 2px solid #7AD447
+}
+

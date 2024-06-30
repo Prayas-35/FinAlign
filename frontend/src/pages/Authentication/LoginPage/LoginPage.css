@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 2px solid #228b22; /* Assuming customteal is #008080 */
+    border: 2px solid #7AD447; /* Assuming customteal is #008080 */
     border-radius: 8px;
     padding: 24px;
   }
@@ -63,3 +63,13 @@
     box-shadow: 0 0 5px #32cd32; /* Adjust the focus ring color if needed */
   }
   
+  #icons {
+    position: absolute;
+    z-index: 999;
+    color: #7AD447;
+    transform: translateX(13.5rem) translateY(0.5rem);
+  }
+
+  #login-form {
+    padding-top: 2rem;
+  }

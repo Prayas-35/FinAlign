@@ -19,7 +19,6 @@ function App() {
               path="/"
               element={
                 <PublicRoute>
-                  {" "}
                   <HomePage />
                 </PublicRoute>
               }
@@ -28,7 +27,6 @@ function App() {
               path="/login"
               element={
                 <PublicRoute>
-                  {" "}
                   <LoginPage />
                 </PublicRoute>
               }
@@ -37,7 +35,6 @@ function App() {
               path="/signup"
               element={
                 <PublicRoute>
-                  {" "}
                   <SignupPage />
                 </PublicRoute>
               }
@@ -46,13 +43,25 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  {" "}
                   <Dashboard />
                 </ProtectedRoute>
               }
             />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/stocks" element={<Stock />} />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/stocks"
+              element={
+                <ProtectedRoute>
+                  <Stock />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Router>
       </UserProvider>
