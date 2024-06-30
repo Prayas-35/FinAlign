@@ -5,7 +5,7 @@ import { UserContext } from "../../context/UserContext";
 
 function Dashboard() {
   const { token } = useContext(UserContext);
-  const [transactions, setTransactions] = useState([]);
+  const [dele, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
     category: "",
@@ -64,7 +64,7 @@ function Dashboard() {
         setTransactions(data);
         console.log("Transactions fetched:", data);
       } catch (error) {
-        console.error("Error fetching transactions:", error.message);
+        console.error("Error fetching dele:", error.message);
       }
     }
   };
@@ -87,7 +87,7 @@ function Dashboard() {
       const result = await response.json();
       console.log("Transaction added:", result);
 
-      setTransactions([...transactions, { ...newTransaction, id: result.id }]);
+      setTransactions([...dele, { ...newTransaction, id: result.id }]);
       setNewTransaction({
         type: "expense",
         category: "",
@@ -104,7 +104,7 @@ function Dashboard() {
   const handleRemoveTransaction = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/transactions/${id}`,
+        `http://localhost:5000/api/deletransactions/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -118,19 +118,20 @@ function Dashboard() {
       }
 
       setTransactions(
-        transactions.filter((transaction) => transaction.id !== id)
+        dele.filter((transaction) => transaction.id !== id)
       );
       console.log("Transaction removed:", id);
+      await fetchBalance();
     } catch (error) {
       console.error("Error removing transaction:", error.message);
     }
   };
 
-  // const totalExpenses = transactions
+  // const totalExpenses = dele
   //   .filter((t) => t.type === "expense")
   //   .reduce((total, t) => total + t.amount, 0);
 
-  // const totalIncome = transactions
+  // const totalIncome = dele
   //   .filter((t) => t.type === "income")
   //   .reduce((total, t) => total + t.amount, 0);
 
@@ -227,14 +228,14 @@ function Dashboard() {
               </button>
             </div>
           </header>
-          {transactions.length === 0 ? (
+          {dele.length === 0 ? (
             <div className="text-center text-gray-600">
               <h2 className="text-2xl font-semibold">No Transactions Yet</h2>
               <p className="mt-2">Start by adding your first transaction!</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {transactions.map((transaction) => (
+              {dele.map((transaction) => (
                 <div
                   key={transaction.id}
                   className="bg-white p-4 rounded-lg shadow"

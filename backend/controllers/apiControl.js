@@ -41,12 +41,12 @@ const getBalance = async (req, res) => {
             if (err) {
                 return res.status(500).json({ message: err.message });
             }
-            
+
             db.get(`SELECT total_income, total_expenditure FROM total WHERE user_id = ?`, [userId], (err, totalRow) => {
                 if (err) {
                     return res.status(500).json({ message: err.message });
                 }
-                
+
                 const response = {
                     balance: financeRow.balance,
                     total_income: totalRow.total_income,
@@ -144,8 +144,93 @@ const getTransactions = async (req, res) => {
     }
 };
 
-module.exports = { 
+const deleteTransactions = async (req, res) => {
+    const token = req.headers['authorization'] || req.get('Authorization');
+    if (!token) {
+        return res.status(400).json({ message: 'Unauthorized' });
+    }
+
+    let userId;
+    try {
+        userId = await verifyToken(token);
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        return res.status(500).json({ message: 'Error verifying token' });
+    }
+
+    console.log('User ID:', userId);
+
+    const transactionId = req.params.id;
+
+    try {
+        db.get('SELECT * FROM log WHERE id = ? AND user_id = ?', [transactionId, userId], (err, row) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
+            if (!row) {
+                return res.status(404).json({ message: 'Transaction not found or not authorized' });
+            }
+
+            const amount = parseFloat(row.amount);
+
+            const updateQueries = [
+                new Promise((resolve, reject) => {
+                    if (amount < 0) {
+                        db.run('UPDATE total SET total_expenditure = total_expenditure - ? WHERE user_id = ?', [-amount, userId], function (err) {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    } else {
+                        db.run('UPDATE total SET total_income = total_income - ? WHERE user_id = ?', [amount, userId], function (err) {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    }
+                }),
+                new Promise((resolve, reject) => {
+                    db.run('UPDATE finance SET balance = balance - ? WHERE user_id = ?', [amount, userId], function (err) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }),
+                new Promise((resolve, reject) => {
+                    db.run('DELETE FROM log WHERE id = ? AND user_id = ?', [transactionId, userId], function (err) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                })
+            ];
+
+            Promise.all(updateQueries)
+                .then(() => {
+                    res.status(200).json({ message: 'Transaction deleted successfully' });
+                })
+                .catch((err) => {
+                    console.error('Error during transaction update:', err);
+                    res.status(500).json({ message: 'Internal server error' });
+                });
+        });
+    } catch (error) {
+        console.error('Error deleting transaction:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = {
     getBalance,
     transactions,
-    getTransactions
+    getTransactions,
+    deleteTransactions
 };
