@@ -37,12 +37,25 @@ const getBalance = async (req, res) => {
     console.log('User ID:', userId);
 
     try {
-        db.get(`SELECT * FROM finance WHERE user_id = ?`, [userId], (err, row) => {
+        db.get(`SELECT balance FROM finance WHERE user_id = ?`, [userId], (err, financeRow) => {
             if (err) {
                 return res.status(500).json({ message: err.message });
             }
-            console.log('Balance:', row.balance);
-            return res.json({'balance': row.balance, 'userId': userId });
+            
+            db.get(`SELECT total_income, total_expenditure FROM total WHERE user_id = ?`, [userId], (err, totalRow) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message });
+                }
+                
+                const response = {
+                    balance: financeRow.balance,
+                    total_income: totalRow.total_income,
+                    total_expenditure: totalRow.total_expenditure,
+                    userId: userId
+                };
+                console.log(response);
+                return res.json(response);
+            });
         });
     } catch (error) {
         console.error('Error fetching balance:', error);
@@ -50,7 +63,7 @@ const getBalance = async (req, res) => {
 }
 
 const transactions = async (req, res) => {
-    const token = req.headers.get('Authorization');
+    const token = req.headers['authorization'] || req.get('Authorization');
     if (!token) {
         return res.status(400).json({ message: 'Unauthorized' });
     }
@@ -58,23 +71,51 @@ const transactions = async (req, res) => {
     const userId = await verifyToken(token);
     console.log('User ID:', userId);
 
-    const { date, category, description, type, amount } = req.body;
+    const { date, category, type, amount } = req.body;
 
-    if (!date || !category || !description || !type || !amount) {
+    if (!date || !category || !type || !amount) {
         return res.status(400).json({ message: 'Invalid request' });
     }
+    let finalAmount = parseFloat(amount);
+    if (isNaN(finalAmount)) {
+        return res.status(400).json({ message: 'Amount must be a number' });
+    }
 
-    else if (type === 'expense') {
-        amount = -amount;
+    if (type === 'expense') {
+        finalAmount = -finalAmount;
     }
 
     try {
-        db.run(`INSERT INTO log (user_id, amount, category, type, description, date) VALUES(?, ?, ?, ?)`, [userId, amount, category, type, description, date], (err, rows) => {
+        db.run(`INSERT INTO log (user_id, amount, category, type, date) VALUES(?, ?, ?, ?, ?)`, [userId, finalAmount, category, type, date], (err, rows) => {
             if (err) {
                 return res.status(500).json({ message: err.message });
             }
-            console.log('Transactions:', rows);
-            return res.json({'transactions': rows, 'userId': userId });
+            console.log('Transaction inserted with ID:', this.lastID);
+            db.run(`UPDATE finance SET balance = balance + ? WHERE user_id = ?`, [finalAmount, userId], (err, rows) => {
+                if (err) {
+                    return res.status(500).json({ message: err.message });
+                }
+                console.log('Balance updated');
+            });
+
+            if (finalAmount < 0) {
+                db.run(`UPDATE total SET total_expenditure = total_expenditure + ? WHERE user_id = ?`, [finalAmount, userId], (err, rows) => {
+                    if (err) {
+                        return res.status(500).json({ message: err.message });
+                    }
+                    console.log('Total expenditure updated');
+                });
+            }
+            else {
+                db.run(`UPDATE total SET total_income = total_income + ? WHERE user_id = ?`, [finalAmount, userId], (err, rows) => {
+                    if (err) {
+                        return res.status(500).json({ message: err.message });
+                    }
+                    console.log('Total income updated');
+                });
+            }
+
+            return res.status(201).json({ message: 'Transaction added', transactionId: this.lastID });
         });
     } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -82,5 +123,6 @@ const transactions = async (req, res) => {
 }
 
 module.exports = { 
-    getBalance 
+    getBalance,
+    transactions
 };
