@@ -146,7 +146,7 @@ function Dashboard() {
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
               <div className="text-gray-900">
-                ₹{Math.abs(totalExpenditure.toFixed(2))}
+                ₹{Math.abs(totalExpenditure).toFixed(2)}
               </div>
             </div>
             <div className="analytics-box bg-green-50 p-4 rounded-lg shadow">

@@ -67,7 +67,7 @@ const Header = () => {
               </button>
               {profileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
-                  <div className="p-2 text-gray-800">{username}</div>
+                  <div className="p-2 text-gray-800">Username: {username}</div>
                 </div>
               )}
               <Link to='/stocks' className="text-white hover:text-gray-300">
