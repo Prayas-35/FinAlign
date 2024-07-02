@@ -5,6 +5,7 @@ import { UserContext } from "../../context/UserContext";
 
 function Dashboard() {
   const { token } = useContext(UserContext);
+  // console.log("Token:", token);
   const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "expense",
@@ -145,7 +146,7 @@ function Dashboard() {
             <div className="analytics-box bg-blue-50 p-4 rounded-lg shadow">
               <div className="text-gray-900 font-semibold">Total Expenses</div>
               <div className="text-gray-900">
-                ₹{totalExpenditure.toFixed(2)}
+                ₹{Math.abs(totalExpenditure.toFixed(2))}
               </div>
             </div>
             <div className="analytics-box bg-green-50 p-4 rounded-lg shadow">

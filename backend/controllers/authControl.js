@@ -38,7 +38,7 @@ const register = async (req, res) => {
                     const userId = this.lastID; // Get the last inserted ID
 
                     // Create JWT token
-                    jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+                    jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '168h' }, (err, token) => {
                         if (err) {
                             return res.status(400).json({ message: err.message });
                         }
@@ -90,7 +90,7 @@ const login = async (req, res) => {
                 return res.status(400).json({ message: 'Incorrect password' });
             }
             if (match) {
-                jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+                jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '168h' }, (err, token) => {
                     if (err) {
                         return res.status(400).json({ message: err.message });
                     }
