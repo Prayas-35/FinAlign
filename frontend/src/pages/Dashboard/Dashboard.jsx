@@ -67,6 +67,7 @@ function Dashboard() {
         const data = await response.json();
         setTransactions(data);
         console.log("Transactions fetched:", data);
+        console.log(data[0].id);
       } catch (error) {
         console.error("Error fetching transactions:", error.message);
       }
@@ -101,6 +102,7 @@ function Dashboard() {
         description: "",
       });
       await fetchBalance();
+      await fetchTransactions();
     } catch (error) {
       console.error("Error adding transaction:", error.message);
     }
@@ -249,11 +251,10 @@ function Dashboard() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div
-                        className={`text-sm font-semibold ${
-                          transaction.type === "expense"
+                        className={`text-sm font-semibold ${transaction.type === "expense"
                             ? "text-red-500"
                             : "text-green-500"
-                        }`}
+                          }`}
                       >
                         {transaction.type === "expense" ? "-₹" : "₹"}
                         {Math.abs(transaction.amount).toFixed(2)}
@@ -273,6 +274,7 @@ function Dashboard() {
                 </div>
               ))}
             </div>
+
           )}
         </main>
       </div>
